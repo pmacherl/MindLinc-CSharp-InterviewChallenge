@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -10,15 +10,16 @@ namespace ConsoleApplication1 {
     using System.Linq;
     using System.Collections;
 
-    public class Person
+    public class Person 
+        // Used to store individuals in the DB
     {
+        
         public string Name;
 
-                    public string Age;
+        public int Age; // age stored as a number might help to group customers/persons(on age basis) with ease. 
 
         public string Gender;
 
-        // Used to find individuals in the DB
         public string DadName;
 
         public string MomName;
@@ -88,7 +89,7 @@ namespace ConsoleApplication1 {
             io.WriteLine("What is your first name ?");
             string f = Console.ReadLine();
             io.WriteLine("What is your last name ?");
-            var l = Console.ReadLine();
+            string l = Console.ReadLine();
             io.WriteLine("What is your age ?");
             var a = Console.ReadLine();
 
@@ -111,20 +112,22 @@ namespace ConsoleApplication1 {
 
         public void WritePerson(ConsoleIO io, Person p) {
             var names = p.Name.Split(' ');
-            Console.WriteLine("Your first name is: {0}", names[0]);
-            Console.WriteLine("Your last name is: {0}", names[1]);
-            Console.WriteLine("Your age is: {0}", p.Age);
-            Console.WriteLine("You are a: {0}", p.Gender == "M" ? "Man" : "Woman");
+            io.WriteLine("Your first name is: {0}", names[0]);
+            io.WriteLine("Your last name is: {0}", names[1]);
+            io.WriteLine("Your age is: {0}", p.Age);
+            io.WriteLine("You are a: {0}", p.Gender == "M" ? "Man" : "Woman");
 
             var dad = Db.people.Where(o => o.Name == p.DadName);
-            if (dad.Count() >= 1) {
-                Console.WriteLine("Your dad's age is {0}", dad.First().Age);
+            /* Here we show the age when there is only one person with p's dad/mom name. 
+            If there are multiple records we cannot assure that the age being returned is their parent's age. */ 
+            if (dad.Count() == 1) {
+                io.WriteLine("Your dad's age is {0}", dad.First().Age);
             }
 
             var mom = from x in Db.people where x.Name == p.MomName select x;
 
-            if (mom.Count() >= 1) {
-                Console.WriteLine("Your mom's age is {0}", mom.First().Age);
+            if (mom.Count() == 1) {
+                io.WriteLine("Your mom's age is {0}", mom.First().Age);
             }
         }
     }
